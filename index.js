@@ -8,10 +8,6 @@ var utils = require(getPath('utils'));
 var _ = require('underscore')._;
 var logger = getLogger({type:'console'});
 
-//对外发布的方法
-exports.getModule = getModule;
-exports.getLogger = getLogger;
-
 /**
  * 获取常用的辅助模块
  * @param  {String} name 模块名称,现支持:
@@ -55,24 +51,13 @@ function getModule(name,options){
         fs.mkdirSync('config');
         fs.createReadStream(getPath('default-config.js')).pipe(fs.createWriteStream(CONFIG_PATH));
       }
-
-    case 'bootstrap':
-      return getPath('bootstrap');    
-
-    case 'jquery':
-      return getPath('jquery.min.js');
+      return require('config'); 
 
     default:
       return require(name);
   }
 }
-
-/**
- * 获取基于./vendor/的路径
- */
-function getPath(filePath){
-  return require('path').join(__dirname, 'vendor', filePath);
-}
+exports.getModule = getModule;
 
 /**
  * 获取logger对象, 参考日志类 https://github.com/flatiron/winston
@@ -122,3 +107,20 @@ function getLogger(options){
   }
   return new winston.Logger({transports: transports});
 }
+exports.getLogger = getLogger;
+
+/**
+ * 获取配置文件
+ */
+function getConfig(key){
+  return getModule('config')[key||'config'];
+}
+exports.getConfig = getConfig;
+
+/**
+ * 获取基于./vendor/的路径
+ */
+function getPath(filePath){
+  return require('path').join(__dirname, 'vendor', filePath);
+}
+exports.getPath = getPath;
