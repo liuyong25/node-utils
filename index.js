@@ -4,17 +4,13 @@
  */
 "use strict";
 
-var logger = require('winston');
+var utils = require(getPath('utils'));
+var _ = require('underscore')._;
+var logger = getLogger({type:'console'});
 
-exports.utils = require(getPath('utils'));
-exports._ = require('underscore')._;
-
-/**
- * 获取基于./vendor/的路径
- */
-function getPath(filePath){
-  return require('path').join(__dirname, 'vendor', filePath);
-}
+//对外发布的方法
+exports.getModule = getModule;
+exports.getLogger = getLogger;
 
 /**
  * 获取常用的辅助模块
@@ -28,10 +24,13 @@ function getPath(filePath){
  * - mongoskin: mongodb数据库驱动
  * - winston/logger: 日志类 https://github.com/flatiron/winston
  * - jquery
- * 
+ *
+ * @param  {Object} options 参数
  * @return {Object}      需要的类库引用
  */
-exports.get = exports.getModule = function(name){
+function getModule(name,options){
+  options = options || {};
+
   switch(name){
     case 'utils':
       return require(getPath('utils'));
@@ -66,4 +65,60 @@ exports.get = exports.getModule = function(name){
     default:
       return require(name);
   }
+}
+
+/**
+ * 获取基于./vendor/的路径
+ */
+function getPath(filePath){
+  return require('path').join(__dirname, 'vendor', filePath);
+}
+
+/**
+ * 获取logger对象, 参考日志类 https://github.com/flatiron/winston
+ */
+function getLogger(options){
+  //默认参数
+  options = _.defaults(options||{},{
+    type: 'common'
+  });
+  
+  var winston = require('winston');
+  
+  //日志Adapter
+  var consoleAdapter = new winston.transports.Console(options.consoleOptions || {
+    colorize: true,
+    timestamp: function(){
+      return utils.formatDate(new Date(),'hh:mm:ss');
+    }
+  });
+
+  var fileAdapter = new winston.transports.File(options.fileOptions || {
+    filename: options.filename || 'output.log',
+    colorize: false,
+    maxsize: 1024 * 1024 * 10,
+    maxFiles: 1,
+    json: false,
+    timestamp: function(){
+      return utils.formatDate();
+    }
+  });
+  
+  //返回
+  var transports = [];
+  switch(options.type){
+    //默认是Console + File
+    case 'common':
+      transports = [consoleAdapter,fileAdapter];
+      break;
+
+    case 'console':
+      transports = [consoleAdapter];
+      break;
+
+    case 'file':
+      transports = [fileAdapter];
+      break;
+  }
+  return new winston.Logger({transports: transports});
 }
