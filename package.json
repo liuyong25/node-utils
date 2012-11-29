@@ -1,18 +1,14 @@
 {
-  "name": "tz-utils",
+  "name": "node-utils",
   "version": "0.0.1",
   "private": true,
 
   "author": "TZ <atian25@qq.com>",
-  "description": "tz's utils",
-  "keywords": ["PureReader","notify","book"],
+  "description": "tz's node utils - A collection of small, simple, and useful node packages.",
+  "keywords": ["utils", "tz"],
   "homepage": "http://atian25.iteye.com",
   
-  "main": "app.js",
-  "scripts": {
-    "start": "node app.js",
-    "test": "node-dev app.js"
-  },
+  "main": "index.js",
   
   "dependencies": {
     "underscore": ">= 1.4",
@@ -33,7 +29,11 @@
   "repositories": [
      {
         "type": "git", 
-        "url": "https://github.com/atian25/PureReader.git"
+        "url": "https://github.com/atian25/node-utils.git"
+     },
+     {
+        "type": "git", 
+        "url": "http://192.168.8.99/node-utils.git"
      }
   ]
 }
