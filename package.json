@@ -1,11 +1,10 @@
 {
   "name": "node-utils",
-  "version": "0.0.1",
-  "private": true,
+  "version": "0.0.2",
 
   "author": "TZ <atian25@qq.com>",
   "description": "tz's node utils - A collection of small, simple, and useful node packages.",
-  "keywords": ["utils", "tz"],
+  "keywords": ["nod-utils", "tz"],
   "homepage": "http://atian25.iteye.com",
   
   "main": "index.js",
@@ -17,7 +16,11 @@
     "winston": ">=0.6",
     "wind": ">=0.7",
     "mongoskin": ">=0.4",
-    "less": ">=1.3"
+    "less": ">=1.3",
+    "express": ">=3.0",
+    "jade": "*",
+    "express-validator": "*",
+    "weibo": ">=0.6"
   },
 
   "licenses": [
